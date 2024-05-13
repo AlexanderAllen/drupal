@@ -1,0 +1,21 @@
+diff --git a/core/tests/bootstrap.php b/core/tests/bootstrap.php
+index 0d66341040..c713b7f23a 100644
+--- a/core/tests/bootstrap.php
++++ b/core/tests/bootstrap.php
+@@ -142,6 +142,16 @@ function drupal_phpunit_populate_class_loader() {
+   return $loader;
+ }
+ 
++// DO NOT INCLUDE CONTRIB MODULE AUTOLOADERS.
++// Contrib dependencies are added to core loader during contrib install.
++// Only include additional loaders from tooling.
++$AUTOLOAD_EXTRA = getenv('AUTOLOAD_EXTRA');
++if (
++  $AUTOLOAD_EXTRA !== FALSE &&
++  file_exists($AUTOLOAD_EXTRA)) {
++    include_once $AUTOLOAD_EXTRA;
++}
++
+ // Do class loader population.
+ $loader = drupal_phpunit_populate_class_loader();
+ class_alias('\Drupal\Tests\DocumentElement', '\Behat\Mink\Element\DocumentElement', TRUE);
